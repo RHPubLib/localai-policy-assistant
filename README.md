@@ -36,13 +36,13 @@ questions that involve circulation rules, fines, or card eligibility.
 
 There are no per-query fees. The model runs on hardware RHPL already owns and operates as
 part of its local AI infrastructure (shared with the Polaris SQL helper — see
-[Polaris-LEAP-SQL-AI-Helper](https://github.com/RHPubLib/Polaris-LEAP-SQL-AI-Helper)).
+[polaris-sql-assistant](https://github.com/RHPubLib/polaris-sql-assistant)).
 
 ### A cloud-based alternative
 
 RHPL also offers staff a second way to ask the same policy questions, built on Google's
 Vertex AI and surfaced right inside the Gmail sidebar:
-[**policies-addon**](https://github.com/RHPubLib/policies-addon). It's the same
+[**gmail-policy-assistant**](https://github.com/RHPubLib/gmail-policy-assistant). It's the same
 grounded, citation-first approach as this project — answers come only from RHPL's policy
 documents — packaged for one-click access without leaving Gmail. The two are complementary:
 this repo keeps everything on library-owned hardware with no data leaving the building; the
@@ -152,7 +152,7 @@ You need three services running:
 - **An LLM** — served via vLLM, Ollama, or any OpenAI-compatible backend
 - **Docling Serve** — for converting PDFs and Word docs to Markdown
 
-See RHPL's [Polaris-LEAP-SQL-AI-Helper](https://github.com/RHPubLib/Polaris-LEAP-SQL-AI-Helper)
+See RHPL's [polaris-sql-assistant](https://github.com/RHPubLib/polaris-sql-assistant)
 for a full infrastructure setup guide using Docker Compose on an AMD ROCm GPU. The same
 stack supports both tools.
 
