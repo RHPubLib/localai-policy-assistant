@@ -38,6 +38,17 @@ There are no per-query fees. The model runs on hardware RHPL already owns and op
 part of its local AI infrastructure (shared with the Polaris SQL helper — see
 [Polaris-LEAP-SQL-AI-Helper](https://github.com/RHPubLib/Polaris-LEAP-SQL-AI-Helper)).
 
+### A cloud-based alternative
+
+RHPL also offers staff a second way to ask the same policy questions, built on Google's
+Vertex AI and surfaced right inside the Gmail sidebar:
+[**policies-addon**](https://github.com/RHPubLib/policies-addon). It's the same
+grounded, citation-first approach as this project — answers come only from RHPL's policy
+documents — packaged for one-click access without leaving Gmail. The two are complementary:
+this repo keeps everything on library-owned hardware with no data leaving the building; the
+add-on trades that for lower setup effort and tighter Workspace integration. Pick whichever
+fits your library's privacy posture and infrastructure.
+
 ---
 
 ## Hardware Requirements
@@ -49,11 +60,17 @@ conversational rather than computationally intensive.
 | Model | Min VRAM | Notes |
 |-------|----------|-------|
 | Qwen3-7B | ~10 GB | Good quality for RAG/Q&A tasks |
-| Qwen3-14B | ~16 GB | RHPL's current model — handles all tools |
+| Qwen3-14B-FP8 | ~15 GB | RHPL's current model — handles all tools |
 | Any instruction-tuned model | varies | Llama 3, Mistral, etc. will also work |
 
 Any NVIDIA (CUDA) or AMD (ROCm) GPU will work. This use case is less demanding than SQL
 generation — a modest GPU is sufficient if it's dedicated to this workload.
+
+RHPL currently runs **Qwen3-14B-FP8** on an **AMD Radeon AI PRO R9700** (RDNA4 / gfx1201,
+32 GB VRAM) served by vLLM under ROCm. FP8 runs natively on RDNA4's matrix cores, so the
+quantized model is both fast and essentially lossless — which matters for policy questions,
+where a subtly wrong answer is worse than no answer. The same server also hosts RHPL's
+Polaris SQL helper.
 
 ---
 
@@ -87,6 +104,15 @@ Original policy documents          Docling Serve             Open WebUI
 When a staff member asks a question, Open WebUI retrieves the most relevant document chunks
 and passes them to the model along with the question. The model answers using only what was
 retrieved.
+
+### Optional: inline definitions
+
+RHPL's policies define key terms (e.g., "Immediate Family") in a single central definitions
+document. A retrieval system can miss those when the term appears in a *different* policy, so
+RHPL adds a small pre-upload step that injects the relevant definition inline into each policy
+that uses the term. This avoids relying on a second retrieval hop to resolve a definition and
+noticeably improves answers on questions like bereavement-leave eligibility. If your policies
+have a similar central glossary, the same technique applies.
 
 ### Smart vocabulary translation
 
