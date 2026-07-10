@@ -60,15 +60,16 @@ conversational rather than computationally intensive.
 | Model | Min VRAM | Notes |
 |-------|----------|-------|
 | Qwen3-7B | ~10 GB | Good quality for RAG/Q&A tasks |
-| Qwen3-14B-FP8 | ~15 GB | RHPL's current model — handles all tools |
+| Qwen3-14B-FP8 | ~15 GB | RHPL's model until 2026-07 (now Qwen3.6-35B-A3B GGUF via llama.cpp) |
 | Any instruction-tuned model | varies | Llama 3, Mistral, etc. will also work |
 
 Any NVIDIA (CUDA) or AMD (ROCm) GPU will work. This use case is less demanding than SQL
 generation — a modest GPU is sufficient if it's dedicated to this workload.
 
-RHPL currently runs **Qwen3-14B-FP8** on an **AMD Radeon AI PRO R9700** (RDNA4 / gfx1201,
-32 GB VRAM) served by vLLM under ROCm. FP8 runs natively on RDNA4's matrix cores, so the
-quantized model is both fast and essentially lossless — which matters for policy questions,
+RHPL currently runs **Qwen3.6-35B-A3B** (GGUF Q4_K_XL) on an **AMD Radeon AI PRO R9700**
+(RDNA4 / gfx1201, 32 GB VRAM) served by **llama.cpp under Vulkan** (since 2026-07-09;
+formerly Qwen3-14B-FP8 on vLLM/ROCm, which is retained as a rollback profile — see
+`/var/opt/rhpl/INFRA-FACTS.md`). Quantization quality matters for policy questions,
 where a subtly wrong answer is worse than no answer. The same server also hosts RHPL's
 Polaris SQL helper.
 
@@ -149,7 +150,7 @@ owui-reload-kb.py            Wipes and re-uploads the Open WebUI knowledge base
 You need three services running:
 
 - **Open WebUI** — the chat interface and knowledge base engine
-- **An LLM** — served via vLLM, Ollama, or any OpenAI-compatible backend
+- **An LLM** — served via llama.cpp, vLLM, Ollama, or any OpenAI-compatible backend
 - **Docling Serve** — for converting PDFs and Word docs to Markdown
 
 See RHPL's [polaris-sql-assistant](https://github.com/RHPubLib/polaris-sql-assistant)
