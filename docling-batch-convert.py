@@ -15,12 +15,17 @@ import requests
 from pathlib import Path
 
 DOCLING_URL = "http://localhost:5001/v1/convert/file"
+# docling-serve ignores a legacy {"options": <json blob>} form field — conversion
+# options must be sent as individual multipart form fields (verified against
+# docling-serve 1.17). Pin them explicitly rather than trusting server defaults,
+# which can drift as the docling-serve container is updated.
 OPTIONS = {
-    "do_ocr": True,
+    "to_formats": "md",
+    "do_ocr": "true",
+    "ocr_engine": "tesseract",
+    "ocr_lang": "eng",
     "pdf_backend": "dlparse_v4",
     "table_mode": "accurate",
-    "ocr_engine": "tesseract",
-    "ocr_lang": ["eng"],
 }
 SUPPORTED_EXTENSIONS = {".pdf", ".docx", ".doc", ".pptx", ".xlsx"}
 
@@ -49,7 +54,7 @@ def convert_file(input_path: Path, output_path: Path) -> bool:
             response = requests.post(
                 DOCLING_URL,
                 files={"files": (input_path.name, f, "application/octet-stream")},
-                data={"options": json.dumps(OPTIONS)},
+                data=OPTIONS,
                 timeout=600,
             )
 
