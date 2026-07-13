@@ -68,8 +68,7 @@ generation — a modest GPU is sufficient if it's dedicated to this workload.
 
 RHPL currently runs **Qwen3.6-35B-A3B** (GGUF Q4_K_XL) on an **AMD Radeon AI PRO R9700**
 (RDNA4 / gfx1201, 32 GB VRAM) served by **llama.cpp under Vulkan** (since 2026-07-09;
-formerly Qwen3-14B-FP8 on vLLM/ROCm, which is retained as a rollback profile — see
-`/var/opt/rhpl/INFRA-FACTS.md`). Quantization quality matters for policy questions,
+formerly Qwen3-14B-FP8 on vLLM/ROCm, which is retained as a rollback profile). Quantization quality matters for policy questions,
 where a subtly wrong answer is worse than no answer. The same server also hosts RHPL's
 Polaris SQL helper.
 
